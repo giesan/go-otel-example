@@ -37,13 +37,19 @@ func rolldice(w http.ResponseWriter, r *http.Request) {
 	ctx, span := tracer.Start(r.Context(), "roll")
 	defer span.End()
 
-	roll := 1 + rand.Intn(6)
+	var msg = "Anonymous player is rolling the dice"
 
-	var msg string
+	roll := 1 + rand.Intn(10)
+
+	if roll > 6 {
+		msg = "The dice roll is invalid"
+		http.Error(w, msg, http.StatusInternalServerError)
+		logger.ErrorContext(ctx, msg, "result", roll)
+		return
+	}
+
 	if player := r.PathValue("player"); player != "" {
 		msg = fmt.Sprintf("%s is rolling the dice", player)
-	} else {
-		msg = "Anonymous player is rolling the dice"
 	}
 	logger.InfoContext(ctx, msg, "result", roll)
 
