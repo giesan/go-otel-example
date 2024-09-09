@@ -1,0 +1,54 @@
+extensions:
+  bearertokenauth/withscheme:
+    scheme: "Bearer"
+    token: ${BEARER_TOKEN}
+  health_check:
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+exporters:
+  otlp/dash0:
+    endpoint: ${DASH0_ENDPOINT}
+    auth:
+      authenticator: bearertokenauth/withscheme
+  debug:
+processors:
+  resource:
+    attributes:
+      - key: environment
+        value: local-go-example
+        action: upsert
+service:
+  extensions:
+    - bearertokenauth/withscheme
+    - health_check
+  pipelines:
+    logs:
+      exporters:
+        - otlp/dash0
+        - debug
+      processors:
+        - resource
+      receivers:
+        - otlp
+    metrics:
+      exporters:
+        - debug
+        - otlp/dash0
+      processors:
+        - resource
+      receivers:
+        - otlp
+    traces:
+      exporters:
+        - otlp/dash0
+        - debug
+      processors:
+        - resource
+      receivers:
+        - otlp
