@@ -1,6 +1,6 @@
-# Example - Connect .NET App to dash0
+# Example - Connect Go App to dash0
 
-This is an example of how the Go application can be connected to dash0 based on based on the official article [Getting Started](https://opentelemetry.io/docs/languages/go/getting-started/).
+This is an example of how the Go application can be connected to dash0 based on the official article [Getting Started](https://opentelemetry.io/docs/languages/go/getting-started/).
 The application and the OpenTelemetry Collector can be started as follows.
 
 ```sh
