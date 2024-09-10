@@ -15,16 +15,13 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o go-otel-example .
 
 # Stage 2: Final stage
-FROM alpine:edge
+FROM scratch
 
 # Set the working directory
 WORKDIR /app
 
 # Copy the binary from the build stage
 COPY --from=build /app/go-otel-example .
-
-# Set the timezone and install CA certificates
-RUN apk --no-cache add ca-certificates tzdata
 
 EXPOSE 8080
 
